@@ -1,0 +1,11 @@
+[project]
+name = "image-text-finder"
+version = "0.1.0"
+description = "API for generating synthetic text-on-image datasets to train a text-detection CNN."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "strict"
+asyncio_default_fixture_loop_scope = "module"
+filterwarnings = ["ignore::DeprecationWarning"]

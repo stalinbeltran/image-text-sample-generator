@@ -1,0 +1,58 @@
+{
+  "name": "mixed-layout",
+  "canvas": { "width": 800, "height": 600 },
+  "background": {
+    "kind": { "choice": ["solid", "gradient", "paper", "lines", "grid", "noise"] },
+    "color": { "choice": ["#ffffff", "#f4f1ea", "#e8eef5", "#1b1f24", "#2b2118"] },
+    "color2": { "choice": ["#d8d8d8", "#c9d6e4", "#3a4450"] },
+    "intensity": { "range": [0.04, 0.18] },
+    "scale": { "range": [2, 10] }
+  },
+  "blocks": [
+    {
+      "kind": "paragraph",
+      "count": { "range": [1, 2], "step": 1 },
+      "width": { "range": [240, 400] },
+      "content": { "source": "words", "words": { "range": [20, 50], "step": 1 } },
+      "typography": {
+        "font_size": { "range": [13, 22] },
+        "line_height": { "range": [1.2, 1.6] },
+        "align": { "choice": ["left", "justify"], "weights": [3, 1] },
+        "color": "auto",
+        "min_contrast": 4.5
+      },
+      "placement": { "angle": { "range": [-4, 4] }, "margin": 14 }
+    },
+    {
+      "kind": "word",
+      "count": { "range": [1, 3], "step": 1 },
+      "content": { "uppercase": { "choice": [true, false] } },
+      "typography": {
+        "font_size": { "range": [24, 54] },
+        "font_weight": { "choice": [400, 700] },
+        "color": "auto",
+        "min_contrast": 4.5
+      },
+      "placement": { "angle": { "range": [-12, 12] } }
+    },
+    {
+      "kind": "spaced",
+      "count": { "range": [0, 2], "step": 1 },
+      "typography": {
+        "font_size": { "range": [18, 32] },
+        "uppercase": true,
+        "color": "auto"
+      }
+    },
+    {
+      "kind": "letter",
+      "count": { "range": [0, 3], "step": 1 },
+      "content": { "chars": 1 },
+      "typography": { "font_size": { "range": [30, 80] }, "color": "auto" }
+    }
+  ],
+  "post": {
+    "blur": { "range": [0, 0.6] },
+    "noise": { "range": [0, 4] }
+  }
+}

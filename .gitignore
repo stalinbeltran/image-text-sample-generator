@@ -216,3 +216,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# project
+.venv/
+data/
+out/
+assets/fonts/*
+!assets/fonts/.gitkeep
+assets/backgrounds/*
+!assets/backgrounds/.gitkeep
