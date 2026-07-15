@@ -198,6 +198,10 @@ The mask is the **same DOM rendered twice**: once normally, once with a styleshe
 out the background and forces every glyph to pure white — so it is pixel-exact and, unlike the
 image, never blurred or noised by the post-processing.
 
+For a standalone, consumer-facing description of the on-disk dataset format — everything a
+downstream project needs to load the samples without reading this codebase — see
+[docs/SAMPLE_FORMAT.md](docs/SAMPLE_FORMAT.md).
+
 `has_overlap` is honest bookkeeping. Overlap avoidance happens at resolve time on *estimated*
 paragraph heights — the true height isn't known until the browser lays the text out — so it is
 best-effort, and this flag is computed after the fact from the real boxes. Filter on it if your
