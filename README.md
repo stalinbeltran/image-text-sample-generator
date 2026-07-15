@@ -28,6 +28,19 @@ python -m venv .venv
 
 Then open <http://127.0.0.1:8000/> for the web app, or `/docs` for the interactive API docs.
 
+> **The `.venv` is not portable.** Never copy a `.venv` from another project or folder — the
+> launchers (`pip.exe`, …) hard-code the absolute path to the Python that created them, so a
+> copied venv fails with *"Unable to create process using ... python.exe"* or *"El sistema no
+> puede encontrar el archivo especificado"*. Delete it and recreate it in place:
+> `rmdir /s /q .venv` then re-run the steps above. If only `pip.exe` misbehaves, call pip as a
+> module instead: `.venv\Scripts\python -m pip install -r requirements.txt`.
+
+> **Skipping `playwright install`?** If you already have Chrome or Edge, you don't need to
+> download Chromium — point the app at your existing binary with `ITF_CHROMIUM_PATH` (see
+> [Using a Chromium you already have](#using-a-chromium-you-already-have) below) and drop the
+> `playwright install` line. Without either, startup fails with *"Executable doesn't exist at
+> ...chrome-headless-shell.exe"*, because the app renders headless and that binary is missing.
+
 Every command here calls `.venv\Scripts\python` explicitly, so it works whether or not the
 virtualenv is activated. Running a bare `uvicorn app.main:app` will fail with *"uvicorn" is not
 recognized* — uvicorn lives inside the venv, not on your PATH. Activate it first
@@ -60,12 +73,15 @@ Deleting or editing a recipe never touches a dataset that was generated from it:
 stores a frozen copy of the recipe as it was at creation time, and that copy — not the recipe
 id — is what regenerates the images.
 
-**Using a Chromium you already have.** If `playwright install` won't cooperate, point the app
-at any Chromium/Chrome binary instead. It must be set *before* you start the server:
+### Using a Chromium you already have
+
+If `playwright install` won't cooperate — or you'd simply rather not download ~150 MB when Chrome
+or Edge is already on the machine — point the app at any Chromium/Chrome binary instead. It must
+be set *before* you start the server:
 
 ```bat
-set ITF_CHROMIUM_PATH=C:\path\to\chrome.exe
-.venv\Scripts\python -m uvicorn app.main:app --reload
+set ITF_CHROMIUM_PATH=C:\Program Files\Google\Chrome\Application\chrome.exe
+.venv\Scripts\python -m app.serve --reload
 ```
 
 `set` only lasts for that console window. `setx ITF_CHROMIUM_PATH "C:\path\to\chrome.exe"` makes
