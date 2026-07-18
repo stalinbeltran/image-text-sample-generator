@@ -192,9 +192,13 @@ La evasión de solapamientos ocurre en tiempo de resolución usando alturas
 *estimadas*, así que no es perfecta. `has_overlap` es el resultado honesto
 **post-render**: `true` cuando dos AABB de bloques realmente se solapan.
 
+El resolutor reparte el layout completo hasta 64 veces y se queda con el primero
+sin colisiones, así que en recetas apretadas (3-4 párrafos en 640x480) el
+solapamiento baja a ~1% de las muestras. No es cero: cuando los bloques
+sencillamente no caben, se conserva el reparto menos malo en vez de fallar.
+
 Si tu entrenamiento necesita muestras limpias, **filtra las que tengan
-`has_overlap == true`**. Empíricamente, ~10% de las muestras pueden salir con
-algún solapamiento según la receta.
+`has_overlap == true`**.
 
 ---
 

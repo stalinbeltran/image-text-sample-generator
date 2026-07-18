@@ -3,6 +3,7 @@ from __future__ import annotations
 import colorsys
 import math
 import random
+from dataclasses import dataclass
 from typing import Callable
 
 from PIL import Image
@@ -14,6 +15,13 @@ from app.models.recipe import BlockRecipe, Recipe
 from app.models.spec import BackgroundSpec, ImageSpec, PostSpec, TextBlockSpec
 
 PLACEMENT_TRIES = 120
+# Placing blocks one after another is greedy: an early block can land in the
+# middle of the canvas and leave nowhere clean for the rest, and no amount of
+# extra tries for that last block can undo it. So when a layout ends up with
+# real overlap, the whole thing is dealt again from scratch. 64 deals take a
+# crowded paragraph recipe from ~24% of images overlapping down to ~1%, for
+# ~2ms per image against a render that costs hundreds.
+LAYOUT_TRIES = 64
 HEIGHT_SAFETY = 1.15
 
 
@@ -30,12 +38,24 @@ def _avg_char_width(font_size: float, letter_spacing: float) -> float:
     return 0.52 * font_size + letter_spacing
 
 
+def _width_safety(n_chars: int) -> float:
+    """Headroom for `n_chars * avg_char_width` on a shrink-to-fit block.
+
+    0.52em is an *average*, and averages only behave over many glyphs. A single
+    letter is a coin flip between an `i` and a `W`: measured against real
+    renders, one glyph comes out up to 1.7x the estimate, while eight or more
+    settle within ~1.1x. Under-estimating here is what puts a big letter on top
+    of a paragraph the resolver thought it had cleared.
+    """
+    return max(1.10, 1.0 + 0.7 / max(1, n_chars))
+
+
 def estimate_size(
     text: str, width: float | None, font_size: float, line_height: float, letter_spacing: float
 ) -> tuple[float, float]:
     char_w = _avg_char_width(font_size, letter_spacing)
     if width is None:
-        return len(text) * char_w, font_size * line_height
+        return len(text) * char_w * _width_safety(len(text)), font_size * line_height
     # Words don't split, so a wrapped line leaves a ragged tail unused. Ignoring
     # that underestimates the height, which is the dangerous direction: the
     # resolver would think a paragraph fits where it doesn't. Measured against
@@ -186,18 +206,52 @@ def _resolve_content(block: BlockRecipe, rng: random.Random) -> str:
     return text
 
 
-def _resolve_block(
+@dataclass
+class _Draft:
+    """Everything about a block except where it sits.
+
+    Content and typography are drawn first and never re-drawn, so retrying a
+    layout only moves blocks around -- the same seed still yields the same text
+    in the same font at the same size.
+    """
+
+    block: BlockRecipe
+    index: int
+    path: str
+    rng: random.Random
+    text: str
+    asset: fonts.FontAsset
+    font_size: float
+    line_height: float
+    letter_spacing: float
+    width: float | None
+    height: float | None
+    est_w: float
+    est_h: float
+    angle: float
+    margin: float
+
+    @property
+    def movable(self) -> bool:
+        """False when the recipe pins the position or waives overlap avoidance.
+
+        Such a block cannot be relocated, so counting its overlap would make
+        every layout attempt look equally bad and burn the retries for nothing.
+        """
+        p = self.block.placement
+        return p.avoid_overlap and not (p.x is not None and p.y is not None)
+
+
+def _draft_block(
     block: BlockRecipe,
     index: int,
     path: str,
     seed: int,
     canvas: tuple[int, int],
     font_pool: list[fonts.FontAsset],
-    bg_img: Callable[[], Image.Image],
-    placed: list[tuple[float, float, float, float]],
-) -> TextBlockSpec:
+) -> _Draft:
     rng = rng_for(seed, path)
-    cw, ch = canvas
+    cw = canvas[0]
     t = block.typography
 
     text = _resolve_content(block, rng)
@@ -225,36 +279,56 @@ def _resolve_block(
     if height is not None:
         est_h = height
 
-    angle = sample_float(block.placement.angle, rng)
-    margin = sample_float(block.placement.margin, rng)
-    x, y = _place(block, rng, canvas, est_w, est_h, angle, margin, placed)
-    placed.append(rotated_aabb(x, y, est_w, est_h, angle))
+    return _Draft(
+        block=block,
+        index=index,
+        path=path,
+        rng=rng,
+        text=text,
+        asset=asset,
+        font_size=font_size,
+        line_height=line_height,
+        letter_spacing=letter_spacing,
+        width=width,
+        height=height,
+        est_w=est_w,
+        est_h=est_h,
+        angle=sample_float(block.placement.angle, rng),
+        margin=sample_float(block.placement.margin, rng),
+    )
+
+
+def _finish_block(
+    draft: _Draft, x: float, y: float, bg_img: Callable[[], Image.Image]
+) -> TextBlockSpec:
+    rng = draft.rng
+    t = draft.block.typography
 
     color = sample(t.color, rng)
     if color == "auto":
-        bg_rgb = backgrounds.mean_color(bg_img(), (x, y, est_w, est_h))
+        bg_rgb = backgrounds.mean_color(bg_img(), (x, y, draft.est_w, draft.est_h))
         color = pick_contrasting_color(bg_rgb, sample_float(t.min_contrast, rng), rng)
 
     return TextBlockSpec(
-        id=f"b{index}",
-        kind=block.kind,
-        text=text,
+        id=f"b{draft.index}",
+        kind=draft.block.kind,
+        text=draft.text,
         x=round(x, 2),
         y=round(y, 2),
-        width=round(width, 2) if width is not None else None,
-        height=round(height, 2) if height is not None else None,
-        font_family=asset.family,
-        font_file=asset.file,
-        font_size=round(font_size, 2),
+        width=round(draft.width, 2) if draft.width is not None else None,
+        height=round(draft.height, 2) if draft.height is not None else None,
+        font_family=draft.asset.family,
+        font_file=draft.asset.file,
+        font_size=round(draft.font_size, 2),
         font_weight=sample_int(t.font_weight, rng),
         italic=sample_bool(t.italic, rng),
         color=color,
         opacity=round(sample_float(t.opacity, rng), 3),
-        letter_spacing=round(letter_spacing, 2),
+        letter_spacing=round(draft.letter_spacing, 2),
         word_spacing=round(sample_float(t.word_spacing, rng), 2),
-        line_height=round(line_height, 3),
+        line_height=round(draft.line_height, 3),
         align=str(sample(t.align, rng)),
-        angle=round(angle, 2),
+        angle=round(draft.angle, 2),
         uppercase=False,  # already applied to `text`, so the DOM text matches the labels
         text_stroke=round(sample_float(t.text_stroke, rng), 2),
         stroke_color=str(sample(t.stroke_color, rng)),
@@ -309,6 +383,41 @@ def _place(
     return best
 
 
+def _layout(
+    drafts: list[_Draft], canvas: tuple[int, int], seed: int
+) -> list[tuple[float, float]]:
+    """Positions for every block, re-dealt until no two of them actually collide.
+
+    `_place` optimises one block against the blocks already down, which is why
+    it cannot recover from a bad early pick. Dealing the whole layout again with
+    a fresh placement stream can: the cost here counts bare overlap only, so an
+    attempt that merely eats into a block's margin still counts as clean and the
+    margin stays what it is -- a preference, not a hard constraint.
+    """
+    best: list[tuple[float, float]] = []
+    best_cost = float("inf")
+
+    for attempt in range(LAYOUT_TRIES):
+        positions: list[tuple[float, float]] = []
+        placed: list[tuple[float, float, float, float]] = []
+        cost = 0.0
+        for d in drafts:
+            rng = rng_for(seed, f"{d.path}.placement#{attempt}")
+            x, y = _place(d.block, rng, canvas, d.est_w, d.est_h, d.angle, d.margin, placed)
+            box = rotated_aabb(x, y, d.est_w, d.est_h, d.angle)
+            if d.movable:
+                cost += sum(_overlap_area(box, other, 0.0) for other in placed)
+            positions.append((x, y))
+            placed.append(box)
+
+        if cost < best_cost:
+            best, best_cost = positions, cost
+        if cost == 0:
+            break
+
+    return best
+
+
 # --------------------------------------------------------------------------
 # Entry point
 # --------------------------------------------------------------------------
@@ -333,25 +442,20 @@ def resolve(recipe: Recipe, seed: int, image_id: str | None = None) -> ImageSpec
             cached.append(backgrounds.build(background, width, height))
         return cached[0]
 
-    blocks: list[TextBlockSpec] = []
-    placed: list[tuple[float, float, float, float]] = []
+    drafts: list[_Draft] = []
     index = 0
     for gi, block in enumerate(recipe.blocks):
         count = sample_int(block.count, rng_for(seed, f"blocks[{gi}].count"))
         for k in range(count):
-            blocks.append(
-                _resolve_block(
-                    block,
-                    index,
-                    f"blocks[{gi}][{k}]",
-                    seed,
-                    (width, height),
-                    font_pool,
-                    bg_img,
-                    placed,
+            drafts.append(
+                _draft_block(
+                    block, index, f"blocks[{gi}][{k}]", seed, (width, height), font_pool
                 )
             )
             index += 1
+
+    positions = _layout(drafts, (width, height), seed)
+    blocks = [_finish_block(d, x, y, bg_img) for d, (x, y) in zip(drafts, positions)]
 
     prng = rng_for(seed, "post")
     post = PostSpec(

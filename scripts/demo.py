@@ -12,7 +12,13 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import sys
 from pathlib import Path
+
+# Run as a plain script (`python scripts/demo.py`), so the repo root is not on
+# sys.path -- only scripts/ is. `app` is not installed either, since the README
+# sets up with requirements.txt rather than `pip install -e .`.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from PIL import Image, ImageDraw
 

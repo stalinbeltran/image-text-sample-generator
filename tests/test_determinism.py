@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from app.core.resolver import resolve
+from app.core.resolver import _overlap_area, estimate_size, resolve, rotated_aabb
 from app.models.params import Choice, Range
 from app.models.recipe import (
     BlockRecipe,
@@ -120,6 +120,43 @@ def test_placement_area_is_respected():
         for block in resolve(recipe, seed).blocks:
             assert block.x >= 0
             assert block.y >= 200 - 1e-6  # top half is off-limits
+
+
+def test_crowded_layouts_almost_never_overlap():
+    """A greedy one-block-at-a-time placement used to overlap ~1 image in 4 here.
+
+    Measured on the resolver's own estimates, which is what placement optimises;
+    the estimates run larger than the real boxes, so a clean layout here is a
+    clean render. Not asserted at zero -- some deals are genuinely too crowded.
+    """
+    recipe = Recipe(
+        canvas=CanvasRecipe(width=640, height=480),
+        blocks=[
+            BlockRecipe(
+                kind="paragraph",
+                count=Range(range=(3, 4), step=1),
+                width=Range(range=(200, 320)),
+                content=ContentRecipe(words=Range(range=(18, 45), step=1)),
+                typography=TypographyRecipe(font_size=Range(range=(11, 17))),
+                placement=PlacementRecipe(margin=18),
+            )
+        ],
+    )
+
+    bad = 0
+    for seed in range(120):
+        boxes = []
+        for b in resolve(recipe, seed).blocks:
+            w, h = estimate_size(b.text, b.width, b.font_size, b.line_height, b.letter_spacing)
+            boxes.append(rotated_aabb(b.x, b.y, w, h, b.angle))
+        if any(
+            _overlap_area(boxes[i], boxes[j], 0.0) > 0
+            for i in range(len(boxes))
+            for j in range(i + 1, len(boxes))
+        ):
+            bad += 1
+
+    assert bad / 120 < 0.05, f"{bad}/120 layouts overlap"
 
 
 def test_choice_weights_are_honoured():
