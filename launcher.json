@@ -1,0 +1,15 @@
+{
+  "name": "image-text sample generator",
+  "description": "API + web UI that generates synthetic text-on-image datasets for training a text-detection CNN.",
+  "processes": [
+    {
+      "name": "backend",
+      "cmd": ".venv\\Scripts\\python -m app.serve --reload --port {PORT_API}",
+      "env": { "ITF_CHROMIUM_PATH": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" }
+    }
+  ],
+  "ports": [
+    { "name": "PORT_API", "preferred": 8001 }
+  ],
+  "open": "http://localhost:{PORT_API}/"
+}
