@@ -23,7 +23,7 @@ back. The labels never depend on the pixels, so they are stable no matter what.
 python -m venv .venv
 .venv\Scripts\pip install -r requirements.txt
 .venv\Scripts\python -m playwright install chromium
-.venv\Scripts\python -m app.serve --reload
+.venv\Scripts\python -m app.serve --reload  --port 8001
 ```
 
 Then open <http://127.0.0.1:8000/> for the web app, or `/docs` for the interactive API docs.
@@ -81,7 +81,7 @@ be set *before* you start the server:
 
 ```bat
 set ITF_CHROMIUM_PATH=C:\Program Files\Google\Chrome\Application\chrome.exe
-.venv\Scripts\python -m app.serve --reload
+.venv\Scripts\python -m app.serve --reload  --port 8001
 ```
 
 `set` only lasts for that console window. `setx ITF_CHROMIUM_PATH "C:\path\to\chrome.exe"` makes
