@@ -19,6 +19,24 @@ back. The labels never depend on the pixels, so they are stable no matter what.
 
 ## Setup
 
+**Linux** (Debian/Ubuntu):
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m playwright install chromium
+sudo .venv/bin/python -m playwright install-deps chromium   # system libs, needs root
+.venv/bin/python -m app.serve --reload --port 8001
+```
+
+`install-deps` is the step that has no Windows equivalent: headless Chromium needs
+`libnss3`, `libgbm1` and friends, and without them the browser dies at launch with
+*"Host system is missing dependencies to run browsers"*. It is the only command here that
+wants root — if you can't get it, `playwright install --dry-run chromium` prints the package
+list to hand to whoever can. `scripts/setup-linux.sh` runs the whole block for you.
+
+**Windows**:
+
 ```bat
 python -m venv .venv
 .venv\Scripts\pip install -r requirements.txt
@@ -26,7 +44,10 @@ python -m venv .venv
 .venv\Scripts\python -m app.serve --reload  --port 8001
 ```
 
-Then open <http://127.0.0.1:8000/> for the web app, or `/docs` for the interactive API docs.
+Then open <http://127.0.0.1:8001/> for the web app, or `/docs` for the interactive API docs.
+
+The rest of this README writes the interpreter the Windows way (`.venv\Scripts\python`); on
+Linux and macOS it is `.venv/bin/python` everywhere.
 
 > **The `.venv` is not portable.** Never copy a `.venv` from another project or folder — the
 > launchers (`pip.exe`, …) hard-code the absolute path to the Python that created them, so a
@@ -84,6 +105,10 @@ set ITF_CHROMIUM_PATH=C:\Program Files\Google\Chrome\Application\chrome.exe
 .venv\Scripts\python -m app.serve --reload  --port 8001
 ```
 
+```bash
+ITF_CHROMIUM_PATH=/usr/bin/chromium .venv/bin/python -m app.serve --reload --port 8001
+```
+
 `set` only lasts for that console window. `setx ITF_CHROMIUM_PATH "C:\path\to\chrome.exe"` makes
 it permanent — but it does not affect the window you type it in, so open a new one.
 
@@ -91,8 +116,12 @@ it permanent — but it does not affect the window you type it in, so open a new
 attach to the console. That is not a sign it's broken.)
 
 Drop `.ttf`/`.otf` files in `assets/fonts/` and photos in `assets/backgrounds/`. With no fonts
-installed the API falls back to common system families (Arial, Georgia, …) — fine to start, but
-embedding real font files is what makes renders reproducible across machines.
+installed the API falls back to common system families — Arial, Georgia, … on Windows; DejaVu and
+Liberation on Linux, because those are what is actually installed there. That split matters more
+than it looks: a spec records the family it picked, and fontconfig substitutes silently rather
+than failing, so a spec asking for "Arial" on Linux would render as Liberation Sans and never say
+so. Embedding real font files in `assets/fonts/` is what makes renders reproducible across
+machines either way.
 
 ## Writing a recipe
 
@@ -226,7 +255,7 @@ come from the layout, not from the pixels.
 
 ## Testing
 
-```bash
+```bat
 .venv\Scripts\python -m pytest -q
 ```
 
@@ -236,8 +265,12 @@ rotation included.
 
 To eyeball it:
 
-```bash
+```bat
 .venv\Scripts\python scripts\demo.py examples\mixed_layout.json --n 4 --out out\demo
+```
+
+```bash
+.venv/bin/python scripts/demo.py examples/mixed_layout.json --n 4 --out out/demo
 ```
 
 which writes each sample plus an overlay with the word quads drawn on top.

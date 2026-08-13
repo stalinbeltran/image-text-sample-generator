@@ -45,3 +45,20 @@ fields — anything else is ignored and the app won't start:
 
 `launcher.json` assumes the `.venv` already exists (see README **Setup**). The
 launcher does not create it — run the setup steps once before launching.
+
+## On Linux
+
+The file above is the **Windows** one, and it stays that way because the schema has
+no per-OS branching: one `cmd` per process, and `.venv\Scripts\python` does not
+exist on Linux. If you run the launcher on a Linux box, swap the `backend` process
+for this and delete the `env` block (Playwright's own Chromium is used there):
+
+```json
+{ "name": "backend", "cmd": ".venv/bin/python -m app.serve --reload --port {PORT_API}" }
+```
+
+Without the launcher, that same line *is* how you start it:
+
+```bash
+.venv/bin/python -m app.serve --reload --port 8001
+```

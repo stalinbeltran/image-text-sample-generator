@@ -219,9 +219,22 @@ __marimo__/
 
 # project
 .venv/
-data/
 out/
-assets/fonts/*
-!assets/fonts/.gitkeep
+
+# The specs ARE the dataset; the pixels are a cache (README, "the storage
+# promise"). So the description is versioned and the load is not: recipes and
+# specs.jsonl travel with the repo, images/masks/labels do not -- anyone can
+# rebuild them byte-for-byte from the specs.
+data/*
+!data/recipes/
+!data/datasets/
+data/datasets/*/images/
+data/datasets/*/masks/
+data/datasets/*/labels/
+data/datasets/*/labels.jsonl
+
+# Embedded fonts ARE versioned: a spec that names a font nobody else has does
+# not reproduce, and reproducibility across machines is the whole point of
+# embedding them instead of using system families. Licences in assets/fonts/README.md.
 assets/backgrounds/*
 !assets/backgrounds/.gitkeep

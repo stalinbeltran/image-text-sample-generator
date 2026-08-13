@@ -1,0 +1,179 @@
+{
+  "id": "dirty-1000-699b2e01",
+  "name": "dirty-1000",
+  "seed": 1,
+  "count": 1000,
+  "created_at": "2026-08-13T22:33:12.132600+00:00",
+  "spec_version": 1,
+  "recipe_id": "dirty-575900a6",
+  "recipe": {
+    "name": "dirty",
+    "canvas": {
+      "width": 640,
+      "height": 480
+    },
+    "background": {
+      "kind": {
+        "choice": [
+          "solid",
+          "gradient",
+          "noise",
+          "paper",
+          "lines",
+          "grid"
+        ],
+        "weights": null
+      },
+      "color": "#fbfaf6",
+      "color2": "#e6e0d2",
+      "angle": {
+        "range": [
+          0.0,
+          360.0
+        ],
+        "step": null
+      },
+      "intensity": {
+        "range": [
+          0.06,
+          0.14
+        ],
+        "step": null
+      },
+      "scale": {
+        "range": [
+          2.0,
+          12.0
+        ],
+        "step": null
+      },
+      "line_color": "#9fb6d1",
+      "photo_dir": null,
+      "photo_file": null,
+      "photo_brightness": {
+        "range": [
+          0.7,
+          1.1
+        ],
+        "step": null
+      },
+      "photo_blur": 0.0,
+      "overlay_color": "#ffffff",
+      "overlay_alpha": {
+        "range": [
+          0.0,
+          0.35
+        ],
+        "step": null
+      }
+    },
+    "blocks": [
+      {
+        "kind": "paragraph",
+        "count": {
+          "range": [
+            1.0,
+            4.0
+          ],
+          "step": 1.0
+        },
+        "width": {
+          "range": [
+            200.0,
+            320.0
+          ],
+          "step": null
+        },
+        "height": null,
+        "content": {
+          "source": "words",
+          "text": null,
+          "lang": "es",
+          "words": {
+            "range": [
+              18.0,
+              45.0
+            ],
+            "step": 1.0
+          },
+          "chars": {
+            "range": [
+              1.0,
+              1.0
+            ],
+            "step": 1.0
+          },
+          "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+          "uppercase": false
+        },
+        "typography": {
+          "font_family": null,
+          "font_size": {
+            "range": [
+              11.0,
+              17.0
+            ],
+            "step": null
+          },
+          "font_weight": {
+            "range": [
+              400.0,
+              700.0
+            ],
+            "step": 300.0
+          },
+          "italic": false,
+          "color": "#1a1a1a",
+          "min_contrast": 3.0,
+          "opacity": 1.0,
+          "letter_spacing": 0.0,
+          "word_spacing": 0.0,
+          "line_height": {
+            "range": [
+              1.15,
+              1.6
+            ],
+            "step": null
+          },
+          "align": "justify",
+          "text_stroke": 0.0,
+          "stroke_color": "#000000",
+          "shadow": false,
+          "blur": 0.0
+        },
+        "placement": {
+          "area": [
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ],
+          "x": null,
+          "y": null,
+          "angle": 0.0,
+          "avoid_overlap": true,
+          "margin": 18
+        }
+      }
+    ],
+    "post": {
+      "blur": 0.0,
+      "noise": 0.0,
+      "jpeg_quality": null,
+      "grayscale": false
+    },
+    "fonts": [
+      "LiberationSans",
+      "LiberationSerif",
+      "LiberationMono",
+      "DejaVuSans",
+      "DejaVuSerif"
+    ]
+  },
+  "build": {
+    "state": "ready",
+    "done": 1000,
+    "total": 1000,
+    "error": null
+  }
+}

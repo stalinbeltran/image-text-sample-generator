@@ -1,0 +1,25 @@
+{
+  "name": "dirty",
+  "canvas": { "width": 640, "height": 480 },
+  "background": {
+    "kind": { "choice": ["solid", "gradient", "noise", "paper", "lines", "grid"] },
+    "color": "#fbfaf6",
+    "color2": "#e6e0d2",
+    "intensity": { "range": [0.06, 0.14] }
+  },
+  "blocks": [
+    {
+      "kind": "paragraph",
+      "count": { "range": [1, 4], "step": 1 },
+      "width": { "range": [200, 320] },
+      "content": { "source": "words", "words": { "range": [18, 45], "step": 1 }, "lang": "es" },
+      "typography": {
+        "font_size": { "range": [11, 17] },
+        "color": "#1a1a1a",
+        "align": "justify"
+      },
+      "placement": { "avoid_overlap": true, "margin": 18 }
+    }
+  ],
+  "fonts": ["LiberationSans", "LiberationSerif", "LiberationMono", "DejaVuSans", "DejaVuSerif"]
+}

@@ -1,16 +1,24 @@
 from __future__ import annotations
 
 import base64
+import sys
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
 from app.settings import FONTS_DIR
 
-# Families we can rely on being installed on a typical Windows/macOS box. Used
-# only when assets/fonts/ is empty -- dropping .ttf/.otf files in there is the
+# Families we can rely on being installed on a typical box, per OS. Used only
+# when assets/fonts/ is empty -- dropping .ttf/.otf files in there is the
 # reproducible path, since embedded fonts render the same anywhere.
-SYSTEM_FALLBACK = [
+#
+# The list is per-OS because the spec records the family it picked, and a spec
+# is supposed to reproduce its pixels. Asking a Linux box for "Arial" does not
+# fail loudly: fontconfig quietly substitutes (Arial -> Liberation Sans, Times
+# New Roman -> Liberation Serif, ...), so the render succeeds while the spec
+# names a font that never touched the canvas. Naming what is actually installed
+# keeps the spec honest.
+_WINDOWS_FALLBACK = [
     "Arial",
     "Times New Roman",
     "Courier New",
@@ -20,6 +28,22 @@ SYSTEM_FALLBACK = [
     "Trebuchet MS",
     "Calibri",
 ]
+
+# The families Debian/Ubuntu install with fonts-dejavu-core / fonts-liberation /
+# fonts-freefont, which is what Playwright's own dependency install pulls in.
+# A box missing them still renders -- fontconfig substitutes, same as before.
+_LINUX_FALLBACK = [
+    "DejaVu Sans",
+    "DejaVu Serif",
+    "DejaVu Sans Mono",
+    "Liberation Sans",
+    "Liberation Serif",
+    "Liberation Mono",
+    "FreeSans",
+    "FreeSerif",
+]
+
+SYSTEM_FALLBACK = _LINUX_FALLBACK if sys.platform.startswith("linux") else _WINDOWS_FALLBACK
 
 _MIME = {".ttf": "font/ttf", ".otf": "font/otf", ".woff": "font/woff", ".woff2": "font/woff2"}
 

@@ -1,0 +1,456 @@
+{
+  "id": "mixed-layout-6b42e199",
+  "name": "mixed-layout",
+  "created_at": "2026-08-13T21:53:32.702855+00:00",
+  "updated_at": "2026-08-13T21:53:32.702855+00:00",
+  "recipe": {
+    "name": "mixed-layout",
+    "canvas": {
+      "width": 800,
+      "height": 600
+    },
+    "background": {
+      "kind": {
+        "choice": [
+          "solid",
+          "gradient",
+          "paper",
+          "lines",
+          "grid",
+          "noise"
+        ],
+        "weights": null
+      },
+      "color": {
+        "choice": [
+          "#ffffff",
+          "#f4f1ea",
+          "#e8eef5",
+          "#1b1f24",
+          "#2b2118"
+        ],
+        "weights": null
+      },
+      "color2": {
+        "choice": [
+          "#d8d8d8",
+          "#c9d6e4",
+          "#3a4450"
+        ],
+        "weights": null
+      },
+      "angle": {
+        "range": [
+          0.0,
+          360.0
+        ],
+        "step": null
+      },
+      "intensity": {
+        "range": [
+          0.04,
+          0.18
+        ],
+        "step": null
+      },
+      "scale": {
+        "range": [
+          2.0,
+          10.0
+        ],
+        "step": null
+      },
+      "line_color": "#9fb6d1",
+      "photo_dir": null,
+      "photo_file": null,
+      "photo_brightness": {
+        "range": [
+          0.7,
+          1.1
+        ],
+        "step": null
+      },
+      "photo_blur": 0.0,
+      "overlay_color": "#ffffff",
+      "overlay_alpha": {
+        "range": [
+          0.0,
+          0.35
+        ],
+        "step": null
+      }
+    },
+    "blocks": [
+      {
+        "kind": "paragraph",
+        "count": {
+          "range": [
+            1.0,
+            2.0
+          ],
+          "step": 1.0
+        },
+        "width": {
+          "range": [
+            240.0,
+            400.0
+          ],
+          "step": null
+        },
+        "height": null,
+        "content": {
+          "source": "words",
+          "text": null,
+          "lang": "mixed",
+          "words": {
+            "range": [
+              20.0,
+              50.0
+            ],
+            "step": 1.0
+          },
+          "chars": {
+            "range": [
+              1.0,
+              1.0
+            ],
+            "step": 1.0
+          },
+          "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+          "uppercase": false
+        },
+        "typography": {
+          "font_family": null,
+          "font_size": {
+            "range": [
+              13.0,
+              22.0
+            ],
+            "step": null
+          },
+          "font_weight": {
+            "range": [
+              400.0,
+              700.0
+            ],
+            "step": 300.0
+          },
+          "italic": false,
+          "color": "auto",
+          "min_contrast": 4.5,
+          "opacity": 1.0,
+          "letter_spacing": 0.0,
+          "word_spacing": 0.0,
+          "line_height": {
+            "range": [
+              1.2,
+              1.6
+            ],
+            "step": null
+          },
+          "align": {
+            "choice": [
+              "left",
+              "justify"
+            ],
+            "weights": [
+              3.0,
+              1.0
+            ]
+          },
+          "text_stroke": 0.0,
+          "stroke_color": "#000000",
+          "shadow": false,
+          "blur": 0.0
+        },
+        "placement": {
+          "area": [
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ],
+          "x": null,
+          "y": null,
+          "angle": {
+            "range": [
+              -4.0,
+              4.0
+            ],
+            "step": null
+          },
+          "avoid_overlap": true,
+          "margin": 14
+        }
+      },
+      {
+        "kind": "word",
+        "count": {
+          "range": [
+            1.0,
+            3.0
+          ],
+          "step": 1.0
+        },
+        "width": null,
+        "height": null,
+        "content": {
+          "source": "words",
+          "text": null,
+          "lang": "mixed",
+          "words": {
+            "range": [
+              20.0,
+              60.0
+            ],
+            "step": 1.0
+          },
+          "chars": {
+            "range": [
+              1.0,
+              1.0
+            ],
+            "step": 1.0
+          },
+          "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+          "uppercase": {
+            "choice": [
+              true,
+              false
+            ],
+            "weights": null
+          }
+        },
+        "typography": {
+          "font_family": null,
+          "font_size": {
+            "range": [
+              24.0,
+              54.0
+            ],
+            "step": null
+          },
+          "font_weight": {
+            "choice": [
+              400,
+              700
+            ],
+            "weights": null
+          },
+          "italic": false,
+          "color": "auto",
+          "min_contrast": 4.5,
+          "opacity": 1.0,
+          "letter_spacing": 0.0,
+          "word_spacing": 0.0,
+          "line_height": {
+            "range": [
+              1.15,
+              1.6
+            ],
+            "step": null
+          },
+          "align": "left",
+          "text_stroke": 0.0,
+          "stroke_color": "#000000",
+          "shadow": false,
+          "blur": 0.0
+        },
+        "placement": {
+          "area": [
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ],
+          "x": null,
+          "y": null,
+          "angle": {
+            "range": [
+              -12.0,
+              12.0
+            ],
+            "step": null
+          },
+          "avoid_overlap": true,
+          "margin": 8.0
+        }
+      },
+      {
+        "kind": "spaced",
+        "count": {
+          "range": [
+            0.0,
+            2.0
+          ],
+          "step": 1.0
+        },
+        "width": null,
+        "height": null,
+        "content": {
+          "source": "words",
+          "text": null,
+          "lang": "mixed",
+          "words": {
+            "range": [
+              20.0,
+              60.0
+            ],
+            "step": 1.0
+          },
+          "chars": {
+            "range": [
+              1.0,
+              1.0
+            ],
+            "step": 1.0
+          },
+          "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+          "uppercase": false
+        },
+        "typography": {
+          "font_family": null,
+          "font_size": {
+            "range": [
+              18.0,
+              32.0
+            ],
+            "step": null
+          },
+          "font_weight": {
+            "range": [
+              400.0,
+              700.0
+            ],
+            "step": 300.0
+          },
+          "italic": false,
+          "color": "auto",
+          "min_contrast": 3.0,
+          "opacity": 1.0,
+          "letter_spacing": 0.0,
+          "word_spacing": 0.0,
+          "line_height": {
+            "range": [
+              1.15,
+              1.6
+            ],
+            "step": null
+          },
+          "align": "left",
+          "text_stroke": 0.0,
+          "stroke_color": "#000000",
+          "shadow": false,
+          "blur": 0.0
+        },
+        "placement": {
+          "area": [
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ],
+          "x": null,
+          "y": null,
+          "angle": 0.0,
+          "avoid_overlap": true,
+          "margin": 8.0
+        }
+      },
+      {
+        "kind": "letter",
+        "count": {
+          "range": [
+            0.0,
+            3.0
+          ],
+          "step": 1.0
+        },
+        "width": null,
+        "height": null,
+        "content": {
+          "source": "words",
+          "text": null,
+          "lang": "mixed",
+          "words": {
+            "range": [
+              20.0,
+              60.0
+            ],
+            "step": 1.0
+          },
+          "chars": 1,
+          "alphabet": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
+          "uppercase": false
+        },
+        "typography": {
+          "font_family": null,
+          "font_size": {
+            "range": [
+              30.0,
+              80.0
+            ],
+            "step": null
+          },
+          "font_weight": {
+            "range": [
+              400.0,
+              700.0
+            ],
+            "step": 300.0
+          },
+          "italic": false,
+          "color": "auto",
+          "min_contrast": 3.0,
+          "opacity": 1.0,
+          "letter_spacing": 0.0,
+          "word_spacing": 0.0,
+          "line_height": {
+            "range": [
+              1.15,
+              1.6
+            ],
+            "step": null
+          },
+          "align": "left",
+          "text_stroke": 0.0,
+          "stroke_color": "#000000",
+          "shadow": false,
+          "blur": 0.0
+        },
+        "placement": {
+          "area": [
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ],
+          "x": null,
+          "y": null,
+          "angle": 0.0,
+          "avoid_overlap": true,
+          "margin": 8.0
+        }
+      }
+    ],
+    "post": {
+      "blur": {
+        "range": [
+          0.0,
+          0.6
+        ],
+        "step": null
+      },
+      "noise": {
+        "range": [
+          0.0,
+          4.0
+        ],
+        "step": null
+      },
+      "jpeg_quality": null,
+      "grayscale": false
+    },
+    "fonts": null
+  }
+}
