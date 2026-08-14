@@ -20,6 +20,20 @@ git push -u origin dev
 nunca por un push directo de un cambio recién hecho. Si un encargo se compone de varias
 piezas, cada pieza terminada es un commit; el push puede ser uno al final del encargo.
 
+## Estos servidores son efímeros: lo que no está empujado, no existe
+
+La máquina de trabajo se rehace sin aviso y de ella solo sobrevive lo que está en el
+remoto. Por eso el push de arriba no es una formalidad ni algo para «cuando quede
+bonito»: **todo cambio y toda documentación se empuja en cuanto queda terminado**.
+
+Y el merge a `main` pendiente es **deuda visible**, no un detalle: un clon limpio saca
+`main`, así que lo que se quedó en `dev` no existe para la máquina siguiente. Medido el
+2026-08-14: el droplet apareció recién restaurado, y la receta `dirty`, los specs
+congelados de `dirty-1000` y `scripts/setup-linux.sh` estaban commiteados y empujados
+—pero solo a `dev`—, así que el proyecto hermano no encontró forma de reconstruir el
+dato del benchmark, lo dio por imposible y midió sobre la fuente equivocada. Estaba
+todo escrito; simplemente no estaba donde se clona.
+
 ## Antes de decir que algo funciona
 
 - `.venv/bin/python -m pytest -q` desde la raíz (en Windows, `.venv\Scripts\python`).
