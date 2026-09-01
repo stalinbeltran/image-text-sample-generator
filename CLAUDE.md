@@ -3,6 +3,23 @@
 El **qué** está en [README.md](README.md) y el formato de salida en
 [docs/SAMPLE_FORMAT.md](docs/SAMPLE_FORMAT.md). Aquí solo van las reglas de trabajo.
 
+## ⚠ Este repo es una pieza de un sistema de seis, y el CENTRAL es otro
+
+Lo que **no es de ningún repo en concreto** —los reportes de todos los estudios, qué está
+decidido y qué sigue abierto, y qué pieza hace qué— vive en
+[`estudios-redes-neuronales`](https://github.com/stalinbeltran/estudios-redes-neuronales).
+Se enlaza, no se copia.
+
+| Si quieres saber… | Mira en |
+|---|---|
+| **qué está fijado hoy** y qué sigue abierto | [`ESTADO.md`](https://github.com/stalinbeltran/estudios-redes-neuronales/blob/main/ESTADO.md) |
+| **qué se corrió, cuándo y qué costó** | [`reportes/README.md`](https://github.com/stalinbeltran/estudios-redes-neuronales/blob/main/reportes/README.md) |
+| **qué repo hace qué** | su [`README.md`](https://github.com/stalinbeltran/estudios-redes-neuronales/blob/main/README.md) |
+
+⚠ **Y si algo que se hace aquí termina en un estudio o una medición, su reporte va allí**, no
+aquí — sea cual sea el repo desde el que se lanzó. Un reporte guardado en el repo que lo dispara
+es invisible para quien clona otro.
+
 ## Entrega: cada cambio pedido acaba en un commit y en `dev`
 
 **Cada cosa que el usuario pida, una vez terminada y probada, se cierra con su propio
