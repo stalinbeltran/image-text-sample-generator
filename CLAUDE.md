@@ -20,22 +20,42 @@ Se enlaza, no se copia.
 aquí — sea cual sea el repo desde el que se lanzó. Un reporte guardado en el repo que lo dispara
 es invisible para quien clona otro.
 
-## Entrega: cada cambio pedido acaba en un commit y en `dev`
+## Entrega: cada cambio pedido acaba en un commit y en `main`
 
 **Cada cosa que el usuario pida, una vez terminada y probada, se cierra con su propio
-commit descriptivo y se empuja a la rama de desarrollo `dev`.** No se acumulan cambios
-para un commit grande al final, y no se trabaja sobre `main`.
+commit descriptivo y se empuja a `main`.** No se acumulan cambios para un commit grande
+al final.
 
 ```bash
-git checkout dev            # o: git checkout -b dev  la primera vez
-# ... el cambio, y sus pruebas ...
-git add -A && git commit -m "..."
-git push -u origin dev
+git add -A && git commit -m "..." && git push origin main
 ```
 
-`main` se queda como está: a `main` se llega por merge cuando el usuario lo decida,
-nunca por un push directo de un cambio recién hecho. Si un encargo se compone de varias
-piezas, cada pieza terminada es un commit; el push puede ser uno al final del encargo.
+⚠ **Esto INVIERTE la instrucción anterior de este fichero, que mandaba a `dev`.** La regla
+vigente es de **2026-08-26, por decisión del usuario**, y estaba escrita en el repo hermano
+—[`foveal-vision/CLAUDE.md`](https://github.com/stalinbeltran/foveal-vision/blob/main/CLAUDE.md),
+que incluso decía *«misma regla en el proyecto hermano `image-text-sample-generator`»*— pero
+**aquí no se actualizó hasta el 2026-09-01**. O sea que durante cinco semanas los dos repos
+del mismo sistema se contradecían por escrito.
+
+**El porqué**: los servidores son efímeros y se rehacen sin aviso. **Un clon limpio saca
+`main`**, así que un commit parado en `dev` es invisible para la máquina siguiente.
+
+⚠ **Y este repo es el que lo pagó.** Medido el 2026-08-14: el procedimiento para reconstruir
+el dato del benchmark **sí estaba commiteado y empujado —pero a `dev` de aquí, sin fusionar a
+`main`—**; en el server nuevo no había ni rastro, se dio por imposible lo que sí estaba
+escrito, y se gastó una corrida de benchmark sobre la fuente equivocada.
+
+⚠ **`origin/dev` sigue existiendo y quedó al día el 2026-09-01. Es historia: no se le empuja
+más**, y no hay merge que esperar.
+
+### La única excepción: varias sesiones a la vez en el mismo server
+
+Cuando hay **trabajos paralelos** —otras sesiones de Claude, con sus propias conversaciones,
+en **workspaces separados** del mismo dev— ésas **no escriben en `main`**: cada workspace usa
+su rama para que dos líneas de trabajo no se pisen. El mecanismo y sus reglas están en
+[`telegram-coordinator/CLAUDE.md` § «Varias sesiones a la vez»](https://github.com/stalinbeltran/telegram-coordinator/blob/main/CLAUDE.md).
+
+⚠ Si **no** estás en un workspace (`~/ws/<algo>`), no es tu caso: vas a `main`.
 
 ## Estos servidores son efímeros: lo que no está empujado, no existe
 
